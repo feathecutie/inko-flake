@@ -3,10 +3,12 @@
 , fetchFromGitHub
 , makeWrapper
 , cargo
-, inko
 , llvm_16
 , stdenv
-, autoPatchelfHook
+, libffi
+, libz
+, libxml2
+, ncurses
 , ...
 }:
 
@@ -25,17 +27,10 @@ rustPlatform.buildRustPackage rec {
 
   buildInputs = [
     stdenv.cc.cc.lib
-    llvm_16.dev
   ];
 
   nativeBuildInputs = [
     makeWrapper
-    autoPatchelfHook
-    llvm_16.dev
-  ];
-
-  runtimeDependencies = [
-    llvm_16.dev
   ];
 
   fixupPhase = ''
@@ -43,8 +38,22 @@ rustPlatform.buildRustPackage rec {
 
     wrapProgram $out/bin/ivm \
       --prefix PATH : ${lib.makeBinPath [ cargo llvm_16.dev stdenv.cc ]} \
-      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath inko.buildInputs}
+      --prefix LIBRARY_PATH : ${lib.makeLibraryPath [
+        libffi
+        libz
+        libxml2
+        ncurses
+      ]} 
 
     runHook postFixup
   '';
+
+  meta = {
+    description = "The cross-platform Inko version manager";
+    homepage = "https://github.com/inko-lang/ivm";
+    license = lib.licenses.mpl20;
+    maintainers = [ lib.maintainers.feathecutie ];
+    platforms = lib.platforms.unix;
+    mainProgram = pname;
+  };
 }

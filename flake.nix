@@ -12,7 +12,7 @@
       {
         packages = {
           inko = pkgs.callPackage ./inko.nix { };
-          ivm = pkgs.callPackage ./ivm.nix { inko = self.packages.${system}.inko; };
+          ivm = pkgs.callPackage ./ivm.nix { };
           default = self.packages.${system}.inko;
         };
       });

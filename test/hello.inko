@@ -1,7 +1,23 @@
+import std.process (sleep)
 import std.stdio (STDOUT)
+import std.time (Duration)
+
+class async Printer {
+  fn async print(message: String, channel: Channel[Nil]) {
+    let _ = STDOUT.new.print(message)
+
+    channel.send(nil)
+  }
+}
 
 class async Main {
   fn async main {
-    STDOUT.new.print("Hello world")
+    let channel = Channel.new(size: 2)
+
+    Printer().print('Hello', channel)
+    Printer().print('world', channel)
+
+    channel.receive
+    channel.receive
   }
 }

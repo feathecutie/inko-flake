@@ -1,7 +1,7 @@
 { lib
 , rustPlatform
 , fetchFromGitHub
-, llvm_17
+, llvm_16
 , libffi
 , libz
 , libxml2
@@ -31,7 +31,7 @@ rustPlatform.buildRustPackage rec {
   ];
 
   nativeBuildInputs = [
-    llvm_17
+    llvm_16
     makeWrapper
   ];
 
@@ -56,4 +56,13 @@ rustPlatform.buildRustPackage rec {
   '';
 
   cargoHash = "sha256-PaZD7wwcami6EWvOHLislNkwQhCZItN9XZkPSExwo0U=";
+
+  meta = {
+    description = "A language for building concurrent software with confidence";
+    homepage = "https://inko-lang.org/";
+    license = lib.licenses.mpl20;
+    maintainers = [ lib.maintainers.feathecutie ];
+    platforms = lib.platforms.unix;
+    mainProgram = pname;
+  };
 }
